@@ -4,6 +4,8 @@ import type { ImageMetadata } from 'astro';
 import rawBooks from '../../data/books.json';
 import rawLayout from '../../data/shelves.json';
 import shelfPhotoInfo from '../data/shelf-photos.json';
+import rawSpines from '../data/spines.json';
+import shelfCorrections from '../data/shelf-corrections.json';
 import { url } from './url';
 
 // ---------- Types ----------
@@ -148,6 +150,9 @@ const layout = rawLayout as Raw[];
 const caseNames = new Map<string, string>();
 for (const g of layout) for (const c of g.bookcases) caseNames.set(c.case_id, c.case_name);
 
+// Books the catalog put on the wrong shelf (see src/data/shelf-corrections.json). Moves stay within a bookcase.
+const shelfFix = new Map<number, string>(shelfCorrections.moves.flatMap((m) => m.ids.map((id) => [id, m.to] as [number, string])));
+
 function toBook(r: Raw): Book {
   const description = toText(r.gr_description);
   const rating = toNumber(r.gr_rating_average);
@@ -162,7 +167,7 @@ function toBook(r: Raw): Book {
       groupSlug: slugify(r.group_name),
       caseId: r.case_id,
       caseName: caseNames.get(r.case_id) ?? r.case_name,
-      shelfId: r.shelf_id,
+      shelfId: shelfFix.get(r._id) ?? r.shelf_id,
     },
     isSigned: r.is_signed === true,
     isCollection: r.is_collection === true,
@@ -262,6 +267,22 @@ function shelfAuthors(list: Book[]): ShelfAuthor[] {
   return [...map.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
 
+// Spines measured from the shelf photos, keyed by book id. `pos` is where the spine sits
+// across the photo (0 = left edge, 1 = right edge).
+interface SpineData {
+  bg: string;
+  fg: string;
+  w: number;
+  h: number;
+  pos: number;
+}
+const spineData = rawSpines as Record<string, SpineData>;
+
+/** Left-to-right as in the shelf photo; books not seen in the photo follow in catalog order. */
+function byPhotoPosition(list: Book[]): Book[] {
+  return [...list].sort((a, b) => (spineData[a.id]?.pos ?? 2) - (spineData[b.id]?.pos ?? 2) || a.id - b.id);
+}
+
 export const groups: Group[] = layout.map((g) => {
   const groupBooks = books.filter((b) => b.location.group === g.group_name);
   const bookcases: Bookcase[] = [...g.bookcases]
@@ -277,7 +298,7 @@ export const groups: Group[] = layout.map((g) => {
       }
       const shelves: Shelf[] = order
         .map((id) => {
-          const list = caseBooks.filter((b) => b.location.shelfId === id);
+          const list = byPhotoPosition(caseBooks.filter((b) => b.location.shelfId === id));
           const position = positionById.get(id) ?? null;
           const image = photoById.get(id);
           return {
@@ -384,16 +405,21 @@ function hash(n: number): number {
   return (x ^ (x >>> 16)) >>> 0;
 }
 
-/** Stable, book-like spine dimensions and colors derived from the book's id, format and length. */
+/**
+ * Spine color and size. Books found in a shelf photo use the color, width and height measured there
+ * (see scripts/spines); the rest get a stable made-up spine from their id, format and length.
+ */
 export function spineStyle(b: Book) {
   const h = hash(b.id);
+  const band = (h >>> 4) % 3; // 0: none, 1: gilt bands, 2: label
+  const photo = spineData[b.id];
+  if (photo) return { bg: photo.bg, fg: photo.fg, width: photo.w, height: photo.h, band };
   const color = SPINE_COLORS[h % SPINE_COLORS.length];
   const pages = b.pages ?? 260;
   const width = Math.round(Math.min(46, Math.max(20, 14 + pages / 22)));
   const fmt = (b.format ?? '').toLowerCase();
   const base = fmt.includes('hard') ? 168 : fmt.includes('mass market') ? 134 : 150;
   const height = base + ((h >>> 8) % 6) * 5;
-  const band = (h >>> 4) % 3; // 0: none, 1: gilt bands, 2: label
   return { ...color, width, height, band };
 }
 

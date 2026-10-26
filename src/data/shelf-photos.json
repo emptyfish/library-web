@@ -248,7 +248,7 @@
             "shelf_id": "H1",
             "hasImage": true,
             "imageWidth": 1280,
-            "imageHeight": 438,
+            "imageHeight": 404,
             "alternateText": "Top shelf"
         },
         {
@@ -262,7 +262,7 @@
             "shelf_id": "H3",
             "hasImage": true,
             "imageWidth": 1280,
-            "imageHeight": 404,
+            "imageHeight": 438,
             "alternateText": "Bottom shelf"
         }
     ]

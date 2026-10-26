@@ -13,6 +13,8 @@ The site is plain HTML generated at build time with [Astro](https://astro.build)
 | `data/shelves.json` | The layout of each location's bookcases and shelves (`library.shelves`). |
 | `src/data/shelf-photos.json` | Position labels for each shelf photo ("Top shelf", …). |
 | `src/assets/shelves/*.jpg` | Shelf photos, named by shelf id. The build makes resized WebP copies. |
+| `src/data/shelf-corrections.json` | Books the original catalog put on the wrong shelf, moved by the site to where the photos show them. Add an entry here instead of editing `books.json`. |
+| `src/data/spines.json` | Spine color, width, height and left-to-right position for each book found in a shelf photo. Generated; see below. |
 
 Some fields (`original_owner`, `date_entered`, `category`) are kept in the archive but aren't used by the site.
 All data shaping (stats, ratings, groupings, cleanup of odd values) happens in [`src/lib/library.ts`](src/lib/library.ts).
@@ -37,6 +39,16 @@ npm run check     # type-check
 - `/author/<slug>` and `/authors`: per-author list and A–Z index
 - `/books/random`: jumps to a random book
 - `/search?q=`: full search results. The header search (press `/`) runs in the browser using `/search-index.json`, which is built along with the site.
+
+## Drawn shelves
+
+The drawn book spines copy the shelf photos: each book's color, thickness, height and order come from
+`src/data/spines.json`. Books not visible in a photo (and shelves A7, D9, F4 and F7, which have none) get a made-up spine.
+
+`scripts/spines/run.sh` regenerates the file (macOS only). It reads spine titles with the macOS text recognizer
+to find where known books sit, places the rest in catalog order between them, snaps to spine edges in the photo,
+and samples each spine's main color and size. Set `PREVIEW_DIR=/some/folder` to also write side-by-side check images.
+It only needs re-running if the photos or the catalog change.
 
 ## Editing the wording
 
