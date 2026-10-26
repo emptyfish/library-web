@@ -1,7 +1,7 @@
 # The Library
 
 A static archive of 1,022 books, organized the way they were shelved: **location → bookcase → shelf**.
-Book details and covers come from Goodreads, from a catalog snapshot taken in December 2024.
+Book details and covers come from Goodreads, from a snapshot taken in 2019.
 
 The site is plain HTML generated at build time with [Astro](https://astro.build). There's no server or database.
 
