@@ -1,0 +1,242 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/source-serif-4';
+@import '@fontsource-variable/source-serif-4/wght-italic.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Warm library palette. Pages use these through Tailwind (bg-paper, text-ink, ...),
+   so the same classes work in light and dark mode. */
+:root {
+  --paper: #f4eee2;
+  --paper-2: #ebe2d0;
+  --card: #fbf8f1;
+  --ink: #2a2019;
+  --ink-2: #5d4e40;
+  --ink-3: #85755f;
+  --line: #dccfb8;
+  --accent: #2f5878; /* colonial blue */
+  --accent-2: #22435f;
+  --on-accent: #fbf3e6;
+  --brass: #9a6d22;
+  --wood: #6b4527;
+  --wood-2: #3f2816;
+  --shadow: 42 32 25;
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #16110d;
+  --paper-2: #1f1813;
+  --card: #241c16;
+  --ink: #efe5d3;
+  --ink-2: #c6b59d;
+  --ink-3: #93826b;
+  --line: #3a2f25;
+  --accent: #8fb4d4;
+  --accent-2: #accae3;
+  --on-accent: #0e1822;
+  --brass: #d9ae62;
+  --wood: #7d5131;
+  --wood-2: #3a2517;
+  --shadow: 0 0 0;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-on-accent: var(--on-accent);
+  --color-brass: var(--brass);
+  --color-wood: var(--wood);
+  --color-wood-2: var(--wood-2);
+
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-serif: 'Source Serif 4 Variable', 'Iowan Old Style', Georgia, serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5.5rem;
+  }
+  body {
+    @apply bg-paper text-ink font-serif antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    /* faint paper grain */
+    background-image: radial-gradient(rgb(var(--shadow) / 0.035) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display text-ink;
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  a {
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+  dialog::backdrop {
+    background: rgb(20 14 10 / 0.72);
+    backdrop-filter: blur(2px);
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-sans text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-ink-3;
+  }
+  .rule {
+    /* double rule, like a printed catalog */
+    border-top: 3px double var(--line);
+  }
+  .card {
+    @apply rounded-lg border border-line bg-card;
+    box-shadow: 0 1px 0 rgb(var(--shadow) / 0.04), 0 6px 18px -12px rgb(var(--shadow) / 0.25);
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-md border border-line bg-card px-3 py-1.5 font-sans text-sm font-medium text-ink-2 transition hover:border-accent hover:text-accent;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 font-sans text-sm font-semibold text-on-accent transition hover:bg-accent-2;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-2.5 py-0.5 font-sans text-xs font-medium text-ink-2;
+  }
+  .link {
+    @apply text-accent underline decoration-accent/40 hover:decoration-accent;
+  }
+  .prose-book {
+    @apply text-ink-2;
+    line-height: 1.7;
+  }
+  .prose-book p + p,
+  .prose-book p + blockquote,
+  .prose-book blockquote + p {
+    margin-top: 0.9em;
+  }
+  .prose-book blockquote {
+    @apply border-l-2 border-line pl-4 italic;
+  }
+  .prose-book b,
+  .prose-book strong {
+    @apply font-semibold text-ink;
+  }
+
+  /* ---- Book spines on a shelf ---- */
+  .shelf {
+    position: relative;
+    padding: 0.75rem 0.75rem 0;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--wood) 42%, var(--card)), color-mix(in srgb, var(--wood) 20%, var(--card)));
+    box-shadow: inset 0 10px 16px -10px rgb(0 0 0 / 0.35);
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+  .shelf-row {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    padding-top: 12px; /* room for the hover lift */
+    min-height: 210px;
+  }
+  .shelf-plank {
+    height: 14px;
+    border-radius: 0 0 0.4rem 0.4rem;
+    background: linear-gradient(to bottom, #8a5a35, #5c3a20 60%, #43291a);
+    box-shadow: 0 8px 14px -8px rgb(0 0 0 / 0.55);
+  }
+  .spine {
+    position: relative;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px 2px 1px 1px;
+    color: var(--spine-fg);
+    background:
+      linear-gradient(90deg, rgb(0 0 0 / 0.22), transparent 18%, rgb(255 255 255 / 0.08) 45%, transparent 70%, rgb(0 0 0 / 0.25)),
+      var(--spine-bg);
+    box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.15);
+    text-decoration: none;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .spine:hover,
+  .spine:focus-visible {
+    transform: translateY(-6px);
+    filter: brightness(1.12);
+  }
+  .spine[aria-current='true'] {
+    transform: translateY(-10px);
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+  }
+  .spine-title {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    max-height: calc(100% - 2.75rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .spine[data-band='1']::before,
+  .spine[data-band='1']::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    height: 2px;
+    background: rgb(222 186 110 / 0.75);
+    box-shadow: 0 4px 0 rgb(222 186 110 / 0.75);
+  }
+  .spine[data-band='1']::before { top: 8px; }
+  .spine[data-band='1']::after { bottom: 12px; }
+  .spine[data-band='2'] .spine-title {
+    margin-top: 1.75rem;
+    max-height: calc(100% - 2.75rem);
+  }
+  .spine[data-band='2']::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 4px;
+    right: 4px;
+    height: 16px;
+    border-radius: 1px;
+    background: rgb(245 235 210 / 0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

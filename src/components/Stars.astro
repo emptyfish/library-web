@@ -1,0 +1,23 @@
+---
+// Five stars filled to the given rating (e.g. 3.7 fills three and most of the fourth).
+interface Props {
+  rating: number;
+  class?: string;
+}
+
+const { rating, class: className = 'h-4' } = Astro.props;
+const pct = Math.max(0, Math.min(100, (rating / 5) * 100));
+const star = 'M10 1.5l2.47 5 5.53.8-4 3.9.94 5.5L10 14.1l-4.94 2.6.94-5.5-4-3.9 5.53-.8z';
+const row = [0, 1, 2, 3, 4];
+---
+
+<span class:list={['relative inline-block aspect-[5/1] align-middle', className]} role="img" aria-label={`${rating.toFixed(2)} out of 5 stars`}>
+  <svg class="absolute inset-0 h-full" viewBox="0 0 100 20" aria-hidden="true">
+    {row.map((i) => <path d={star} transform={`translate(${i * 20} 0)`} fill="none" stroke="var(--brass)" stroke-width="1.2" />)}
+  </svg>
+  <span class="absolute inset-y-0 left-0 overflow-hidden" style={`width:${pct}%`}>
+    <svg class="h-full max-w-none" viewBox="0 0 100 20" aria-hidden="true">
+      {row.map((i) => <path d={star} transform={`translate(${i * 20} 0)`} fill="var(--brass)" />)}
+    </svg>
+  </span>
+</span>

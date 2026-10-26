@@ -1,0 +1,175 @@
+---
+import { url } from '../lib/url';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Stars from '../components/Stars.astro';
+import { fillText, groups, ratingBuckets, spineStyle, summary, topAuthors } from '../lib/library';
+import { siteText } from '../site-text';
+import woodFloor from '../assets/wood-floor.jpg';
+
+// All wording comes from src/site-text.ts ('' hides a line).
+const t = Object.fromEntries(
+  Object.entries(siteText.home).map(([k, v]) => [k, typeof v === 'string' ? fillText(v) : v]),
+) as typeof siteText.home;
+
+const n = (v: number) => v.toLocaleString('en-US');
+const stats = [
+  { value: n(summary.totalBooks), label: 'books' },
+  { value: n(summary.totalAuthors), label: 'authors' },
+  { value: n(summary.totalPages), label: 'pages' },
+];
+const maxBucket = Math.max(...ratingBuckets.map((r) => r.percent));
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="relative isolate overflow-hidden border-b border-line">
+    <Image
+      src={woodFloor}
+      alt=""
+      widths={[640, 1280, woodFloor.width]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 -z-10 size-full object-cover"
+    />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-[#1c120b]/75 via-[#1c120b]/60 to-[#1c120b]/85"></div>
+    <div class="mx-auto max-w-6xl px-4 py-16 text-center text-[#f6ecdc] sm:px-6 sm:py-24">
+      {t.eyebrow && <p class="eyebrow mb-3 !text-[#e2c99a]">{t.eyebrow}</p>}
+      <h1 class="font-display text-5xl font-semibold !text-[#fbf3e6] sm:text-7xl">{t.title || siteText.siteName}</h1>
+      {t.tagline && <p class="mx-auto mt-4 max-w-xl text-lg text-[#ecdfca] sm:text-xl">{t.tagline}</p>}
+      {t.showStats && (
+      <dl class="mx-auto mt-10 grid max-w-2xl grid-cols-3 divide-x divide-white/20">
+        {
+          stats.map((s) => (
+            <div class="px-2">
+              <dt class="sr-only">{s.label}</dt>
+              <dd class="font-display text-[1.6rem] font-semibold tabular-nums min-[400px]:text-3xl sm:text-5xl">{s.value}</dd>
+              <dd class="mt-1 font-sans text-xs uppercase tracking-[0.18em] text-[#e2c99a] sm:text-sm">{s.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      )}
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <!-- Locations -->
+    <section class="mt-14" aria-labelledby="where">
+      {t.locationsHeading && <h2 id="where" class="text-3xl font-semibold">{t.locationsHeading}</h2>}
+      {t.locationsSubtext && <p class="mt-1 text-ink-2">{t.locationsSubtext}</p>}
+      <div class="mt-6 grid gap-5 md:grid-cols-2">
+        {
+          groups.map((g) => {
+            const sample = g.bookcases.flatMap((c) => c.shelves[0]?.books.slice(0, 9) ?? []).slice(0, 34);
+            return (
+              <a href={url(`/library/${g.slug}`)} class="card group block overflow-hidden transition hover:-translate-y-0.5 hover:border-accent">
+                <div class="shelf !rounded-none !px-4 !pt-5" aria-hidden="true">
+                  <div class="flex items-end gap-[2px] overflow-hidden">
+                    {sample.map((b) => {
+                      const s = spineStyle(b);
+                      return (
+                        <span
+                          class="spine pointer-events-none"
+                          data-band={s.band}
+                          style={`width:${Math.round(s.width * 0.6)}px;height:${Math.round(s.height * 0.5)}px;--spine-bg:${s.bg};--spine-fg:${s.fg}`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+                <div class="shelf-plank !rounded-none" aria-hidden="true" />
+                <div class="flex items-end justify-between gap-4 p-5">
+                  <div>
+                    <h3 class="text-2xl font-semibold group-hover:text-accent">{g.name}</h3>
+                    <p class="mt-1 font-sans text-sm text-ink-3">
+                      {g.bookcases.length} bookcases · {g.totalShelves} shelves · {n(g.totalAuthors)} authors
+                    </p>
+                  </div>
+                  <p class="text-right">
+                    <span class="block font-display text-3xl font-semibold tabular-nums">{n(g.totalBooks)}</span>
+                    <span class="font-sans text-xs uppercase tracking-widest text-ink-3">books</span>
+                  </p>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <div class="mt-16 grid gap-12 lg:grid-cols-[1.1fr_1fr]">
+      <!-- Ratings -->
+      <section aria-labelledby="ratings">
+        {t.ratingsHeading && <h2 id="ratings" class="text-3xl font-semibold">{t.ratingsHeading}</h2>}
+        {t.ratingsSubtext && <p class="mt-1 text-ink-2">{t.ratingsSubtext}</p>}
+        <div class="card mt-6 p-5 sm:p-6">
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <span class="font-display text-5xl font-semibold tabular-nums">{summary.averageRating.toFixed(2)}</span>
+            <span>
+              <Stars rating={summary.averageRating} class="h-5" />
+              {t.ratingsAverageLabel && <span class="block font-sans text-sm text-ink-3">{t.ratingsAverageLabel}</span>}
+            </span>
+          </div>
+          <ul class="mt-6 space-y-3">
+            {
+              ratingBuckets.map((r) => (
+                <li class="grid grid-cols-[4.5rem_1fr_6.5rem] items-center gap-3 font-sans text-sm">
+                  <span class="flex items-center gap-1 font-medium text-ink-2">
+                    {r.stars}
+                    <Icon name="star" class="size-3.5 text-brass" />
+                    <span class="text-ink-3">+</span>
+                  </span>
+                  <span class="h-3 overflow-hidden rounded-full bg-paper-2" aria-hidden="true">
+                    <span class="block h-full rounded-full bg-accent" style={`width:${(r.percent / maxBucket) * 100}%`} />
+                  </span>
+                  <span class="text-right tabular-nums text-ink-2">
+                    {n(r.books)} <span class="text-ink-3">({Math.round(r.percent * 100)}%)</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+          {t.ratingsFootnote && <p class="mt-4 font-sans text-xs text-ink-3">{t.ratingsFootnote}</p>}
+        </div>
+      </section>
+
+      <!-- Top authors -->
+      <section aria-labelledby="top-authors">
+        {t.authorsHeading && <h2 id="top-authors" class="text-3xl font-semibold">{t.authorsHeading}</h2>}
+        {t.authorsSubtext && <p class="mt-1 text-ink-2">{t.authorsSubtext}</p>}
+        <ol class="card mt-6 divide-y divide-line">
+          {
+            topAuthors.map((a, i) => (
+              <li>
+                <a href={url(`/author/${a.slug}`)} class="group flex items-center gap-4 px-5 py-3 hover:bg-paper-2/60">
+                  <span class="w-6 font-display text-lg text-ink-3 tabular-nums">{i + 1}</span>
+                  <span class="flex-1 font-display text-lg group-hover:text-accent">{a.name}</span>
+                  <span class="chip">{a.books.length} books</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+        {t.authorsLink && (
+          <a href={url('/authors')} class="mt-4 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-accent hover:underline">
+            {t.authorsLink} <Icon name="arrow" class="size-4" />
+          </a>
+        )}
+      </section>
+    </div>
+
+    <!-- Random -->
+    {t.randomHeading && (
+      <section class="card mt-16 flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-2xl font-semibold">{t.randomHeading}</h2>
+          {t.randomSubtext && <p class="mt-1 text-ink-2">{t.randomSubtext}</p>}
+        </div>
+        <a href={url('/books/random')} class="btn-primary"><Icon name="shuffle" class="size-4" /> {t.randomButton || 'Random book'}</a>
+      </section>
+    )}
+  </div>
+</Base>

@@ -1,0 +1,38 @@
+---
+import { url } from '../lib/url';
+// A shelf drawn as a row of book spines; each spine links to its book.
+import type { Book } from '../lib/library';
+import { spineStyle } from '../lib/library';
+
+interface Props {
+  books: Book[];
+  current?: string; // slug of a book to highlight
+  label: string;
+}
+
+const { books, current, label } = Astro.props;
+---
+
+<div class="shelf" role="group" aria-label={label}>
+  <div class="shelf-row" data-shelf-row>
+    {
+      books.map((b) => {
+        const s = spineStyle(b);
+        return (
+          <a
+            href={url(`/books/${b.slug}`)}
+            class="spine"
+            data-band={s.band}
+            aria-current={b.slug === current ? 'true' : undefined}
+            title={`${b.title} — ${b.author}`}
+            style={`width:${s.width}px;height:${s.height}px;--spine-bg:${s.bg};--spine-fg:${s.fg}`}
+          >
+            <span class="spine-title">{b.title}</span>
+            <span class="sr-only"> by {b.author}</span>
+          </a>
+        );
+      })
+    }
+  </div>
+</div>
+<div class="shelf-plank" aria-hidden="true"></div>

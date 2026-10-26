@@ -1,0 +1,268 @@
+ [
+        {
+            "shelf_id": "A1",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 284,
+            "alternateText": "Top shelf"
+        },
+        {
+            "shelf_id": "A2",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 278,
+            "alternateText": "Second shelf from top"
+        },
+        {
+            "shelf_id": "A3",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 276,
+            "alternateText": "Third shelf from top"
+        },
+        {
+            "shelf_id": "A4",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 269,
+            "alternateText": "Third shelf from bottom"
+        },
+        {
+            "shelf_id": "A5",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 268,
+            "alternateText": "Second shelf from bottom"
+        },
+        {
+            "shelf_id": "A6",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 265,
+            "alternateText": "Bottom shelf"
+        },
+        {
+            "shelf_id": "B1",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 335,
+            "alternateText": "Top shelf"
+        },
+        {
+            "shelf_id": "B2",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 320,
+            "alternateText": "Bottom shelf"
+        },
+        {
+            "shelf_id": "C1",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 474,
+            "alternateText": "Top shelf"
+        },
+        {
+            "shelf_id": "C2",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 579,
+            "alternateText": "Second shelf from top"
+        },
+        {
+            "shelf_id": "C3",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 566,
+            "alternateText": "Third shelf from top"
+        },
+        {
+            "shelf_id": "C4",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 570,
+            "alternateText": "Fourth shelf from top"
+        },
+        {
+            "shelf_id": "C5",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 590,
+            "alternateText": "Fourth shelf from bottom"
+        },
+        {
+            "shelf_id": "C6",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 628,
+            "alternateText": "Third shelf from bottom"
+        },
+        {
+            "shelf_id": "C7",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 664,
+            "alternateText": "Second shelf from bottom"
+        },
+        {
+            "shelf_id": "C8",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 615,
+            "alternateText": "Bottom shelf"
+        },
+        {
+            "shelf_id": "D1",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 526,
+            "alternateText": "Top shelf"
+        },
+        {
+            "shelf_id": "D2",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 581,
+            "alternateText": "Middle shelf"
+        },
+        {
+            "shelf_id": "D3",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 479,
+            "alternateText": "Bottom shelf"
+        },
+        {
+            "shelf_id": "E1",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 340,
+            "alternateText": "Top shelf"
+        },
+        {
+            "shelf_id": "E2",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 450,
+            "alternateText": "Second shelf from top"
+        },
+        {
+            "shelf_id": "E3",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 480,
+            "alternateText": "Third shelf from top"
+        },
+        {
+            "shelf_id": "E4",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 450,
+            "alternateText": "Fourth shelf from top"
+        },
+        {
+            "shelf_id": "E5",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 474,
+            "alternateText": "Third shelf from bottom"
+        },
+        {
+            "shelf_id": "E6",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 445,
+            "alternateText": "Second shelf from bottom"
+        },
+        {
+            "shelf_id": "E7",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 616,
+            "alternateText": "Bottom shelf"
+        },
+        {
+            "shelf_id": "F1",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 347,
+            "alternateText": "Top shelf"
+        },
+        {
+            "shelf_id": "F2",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 434,
+            "alternateText": "Second shelf from top"
+        },
+        {
+            "shelf_id": "F3",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 477,
+            "alternateText": "Third shelf from top"
+        },
+        {
+            "shelf_id": "F4",
+            "hasImage": false,
+            "imageWidth": 0,
+            "imageHeight": 0,
+            "alternateText": "Third shelf from top"
+        },
+        {
+            "shelf_id": "F5",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 463,
+            "alternateText": "Second shelf from bottom"
+        },
+        {
+            "shelf_id": "F6",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 408,
+            "alternateText": "Bottom shelf"
+        },
+        {
+            "shelf_id": "G1",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 308,
+            "alternateText": "Top shelf"
+        },
+        {
+            "shelf_id": "G2",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 288,
+            "alternateText": "Middle shelf"
+        },
+        {
+            "shelf_id": "G3",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 353,
+            "alternateText": "Bottom shelf"
+        },
+        {
+            "shelf_id": "H1",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 438,
+            "alternateText": "Top shelf"
+        },
+        {
+            "shelf_id": "H2",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 332,
+            "alternateText": "Middle shelf"
+        },
+        {
+            "shelf_id": "H3",
+            "hasImage": true,
+            "imageWidth": 1280,
+            "imageHeight": 404,
+            "alternateText": "Bottom shelf"
+        }
+    ]

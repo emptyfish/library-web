@@ -1,0 +1,78 @@
+---
+import { url } from '../lib/url';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base title="Search">
+  <div class="mx-auto max-w-4xl px-4 sm:px-6">
+    <header class="pt-10 sm:pt-14">
+      <h1 class="text-4xl font-semibold">Search</h1>
+      <form action={url('/search')} method="get" role="search" class="mt-5 flex gap-2" data-page-search>
+        <label class="relative flex-1">
+          <span class="sr-only">Search titles, authors, publishers</span>
+          <Icon name="search" class="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-ink-3" />
+          <input
+            name="q"
+            type="search"
+            autocomplete="off"
+            placeholder="Search titles, authors, publishers…"
+            class="h-12 w-full rounded-md border border-line bg-card pl-10 pr-3 font-sans text-base text-ink placeholder:text-ink-3 focus:border-accent"
+          />
+        </label>
+        <button class="btn-primary">Search</button>
+      </form>
+    </header>
+
+    <div class="mt-8" data-page-results aria-live="polite">
+      <p class="font-sans text-sm text-ink-3">Search covers titles, authors, publishers, catalog notes and words from each book's description.</p>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { escapeHtml, highlight, search, url } from '../scripts/search-core';
+
+  const form = document.querySelector<HTMLFormElement>('[data-page-search]')!;
+  const input = form.querySelector<HTMLInputElement>('input[name="q"]')!;
+  const out = document.querySelector<HTMLElement>('[data-page-results]')!;
+  const q = new URLSearchParams(location.search).get('q')?.trim() ?? '';
+  input.value = q;
+
+  async function run() {
+    if (q.length < 2) return input.focus();
+    out.innerHTML = `<p class="font-sans text-sm text-ink-3">Searching…</p>`;
+    let found;
+    try {
+      found = await search(q);
+    } catch {
+      out.innerHTML = `<p class="font-sans text-sm text-ink-3">Search couldn't load. Check your connection and try again.</p>`;
+      return;
+    }
+    const { books, authors } = found;
+    window._paq.push(['trackSiteSearch', q, false, books.length]);
+    if (!books.length && !authors.length) {
+      out.innerHTML = `<p class="text-ink-2">Nothing on the shelves matches “${escapeHtml(q)}”.</p>`;
+      return;
+    }
+    const authorHtml = authors.length
+      ? `<section class="mb-8"><h2 class="eyebrow">Authors</h2><ul class="mt-2 flex flex-wrap gap-2">${authors
+          .slice(0, 12)
+          .map((a) => `<li><a class="chip hover:border-accent hover:text-accent" href="${url(`/author/${escapeHtml(a.slug)}`)}">${highlight(a.title, q)} <span class="text-ink-3">${a.count}</span></a></li>`)
+          .join('')}</ul></section>`
+      : '';
+    const bookHtml = books.length
+      ? `<section><h2 class="eyebrow">${books.length} book${books.length === 1 ? '' : 's'}</h2><ul class="mt-2 divide-y divide-line">${books
+          .map((b) => {
+            const cover = b.cover
+              ? `<img src="${escapeHtml(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer" class="h-16 w-11 shrink-0 rounded-[2px] object-cover shadow" onerror="this.style.visibility='hidden'">`
+              : `<span class="block h-16 w-11 shrink-0 rounded-[2px] bg-paper-2"></span>`;
+            return `<li><a href="${url(`/books/${escapeHtml(b.slug)}`)}" class="group flex items-center gap-4 py-3">${cover}<span class="min-w-0"><span class="block font-display text-lg leading-snug group-hover:text-accent">${highlight(b.title, q)}</span><span class="block font-sans text-sm text-ink-2">${highlight(b.author, q)}</span><span class="block font-sans text-xs text-ink-3">${[b.year, b.where].filter(Boolean).map((s) => escapeHtml(s!)).join(' · ')}</span></span></a></li>`;
+          })
+          .join('')}</ul></section>`
+      : '';
+    out.innerHTML = authorHtml + bookHtml;
+  }
+
+  run();
+</script>

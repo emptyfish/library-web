@@ -1,0 +1,25 @@
+---
+import { url } from '../lib/url';
+// Where a book sat: Group › Bookcase › Shelf, each step linking into the library page.
+import type { Location } from '../lib/library';
+import { shelfUrl } from '../lib/library';
+
+interface Props {
+  location: Location;
+  class?: string;
+}
+
+const { location: l, class: className = '' } = Astro.props;
+---
+
+<nav aria-label="Location" class:list={['font-sans text-sm text-ink-3', className]}>
+  <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+    <li><a class="hover:text-accent hover:underline" href={url(`/library/${l.groupSlug}`)}>{l.group}</a></li>
+    <li aria-hidden="true">›</li>
+    <li>
+      <a class="hover:text-accent hover:underline" href={url(`/library/${l.groupSlug}#case-${l.caseId}`)}>{l.caseName} bookcase</a>
+    </li>
+    <li aria-hidden="true">›</li>
+    <li><a class="hover:text-accent hover:underline" href={shelfUrl(l)}>Shelf {l.shelfId}</a></li>
+  </ol>
+</nav>

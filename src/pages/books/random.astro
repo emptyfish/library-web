@@ -1,0 +1,25 @@
+---
+import { url } from '../../lib/url';
+// Sends the visitor to a random book. The list of books is baked in; the pick happens in the browser.
+import Base from '../../layouts/Base.astro';
+import { books } from '../../lib/library';
+
+const picks = books.map((b) => [b.slug, `${b.title} by ${b.author}`]);
+const bookBase = url('/books/');
+---
+
+<Base title="Random book">
+  <div class="mx-auto max-w-xl px-4 py-24 text-center sm:px-6">
+    <h1 class="text-3xl font-semibold">Pulling a book off the shelf…</h1>
+    <noscript>
+      <p class="mt-4 text-ink-2">
+        Random picks need JavaScript. Try <a class="link" href={url('/library/pleasant-street')}>browsing the shelves</a> instead.
+      </p>
+    </noscript>
+  </div>
+  <script is:inline define:vars={{ picks, bookBase }}>
+    const [slug, label] = picks[Math.floor(Math.random() * picks.length)];
+    window.libTrack('random', label);
+    location.replace(bookBase + slug);
+  </script>
+</Base>

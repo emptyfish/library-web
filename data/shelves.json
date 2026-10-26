@@ -1,0 +1,323 @@
+[{
+  "_id": 1,
+  "group_name": "Pleasant Street",
+  "bookcases": [
+    {
+      "case_index": 1,
+      "case_id": "A",
+      "case_name": "Left",
+      "shelves": [
+        {
+          "shelf_index": 1,
+          "shelf_id": "A1",
+          "shelf_name": "A1"
+        },
+        {
+          "shelf_index": 2,
+          "shelf_id": "A2",
+          "shelf_name": "A2"
+        },
+        {
+          "shelf_index": 3,
+          "shelf_id": "A3",
+          "shelf_name": "A3"
+        },
+        {
+          "shelf_index": 4,
+          "shelf_id": "A4",
+          "shelf_name": "A4"
+        },
+        {
+          "shelf_index": 5,
+          "shelf_id": "A5",
+          "shelf_name": "A5"
+        },
+        {
+          "shelf_index": 6,
+          "shelf_id": "A6",
+          "shelf_name": "A6"
+        },
+        {
+          "shelf_index": 7,
+          "shelf_id": "A7",
+          "shelf_name": "A7"
+        },
+        {
+          "shelf_index": 8,
+          "shelf_id": "A8",
+          "shelf_name": "A8"
+        }
+      ]
+    },
+    {
+      "case_index": 2,
+      "case_id": "B",
+      "case_name": "Middle",
+      "shelves": [
+        {
+          "shelf_index": 1,
+          "shelf_id": "B1",
+          "shelf_name": "B1"
+        },
+        {
+          "shelf_index": 2,
+          "shelf_id": "B2",
+          "shelf_name": "B2"
+        },
+        {
+          "shelf_index": 3,
+          "shelf_id": "B3",
+          "shelf_name": "B3"
+        },
+        {
+          "shelf_index": 4,
+          "shelf_id": "B4",
+          "shelf_name": "B4"
+        },
+        {
+          "shelf_index": 5,
+          "shelf_id": "B5",
+          "shelf_name": "B5"
+        },
+        {
+          "shelf_index": 6,
+          "shelf_id": "B6",
+          "shelf_name": "B6"
+        },
+        {
+          "shelf_index": 7,
+          "shelf_id": "B7",
+          "shelf_name": "B7"
+        },
+        {
+          "shelf_index": 8,
+          "shelf_id": "B8",
+          "shelf_name": "B8"
+        }
+      ]
+    },
+    {
+      "case_index": 3,
+      "case_id": "C",
+      "case_name": "Right",
+      "shelves": [
+        {
+          "shelf_index": 1,
+          "shelf_id": "C1",
+          "shelf_name": "C1"
+        },
+        {
+          "shelf_index": 2,
+          "shelf_id": "C2",
+          "shelf_name": "C2"
+        },
+        {
+          "shelf_index": 3,
+          "shelf_id": "C3",
+          "shelf_name": "C3"
+        },
+        {
+          "shelf_index": 4,
+          "shelf_id": "C4",
+          "shelf_name": "C4"
+        },
+        {
+          "shelf_index": 5,
+          "shelf_id": "C5",
+          "shelf_name": "C5"
+        },
+        {
+          "shelf_index": 6,
+          "shelf_id": "C6",
+          "shelf_name": "C6"
+        },
+        {
+          "shelf_index": 7,
+          "shelf_id": "C7",
+          "shelf_name": "C7"
+        },
+        {
+          "shelf_index": 8,
+          "shelf_id": "C8",
+          "shelf_name": "C8"
+        }
+      ]
+    },
+    {
+      "case_index": 4,
+      "case_id": "G",
+      "case_name": "Living Room",
+      "shelves": [
+        {
+          "shelf_index": 1,
+          "shelf_id": "G1",
+          "shelf_name": "G1"
+        },
+        {
+          "shelf_index": 2,
+          "shelf_id": "G2",
+          "shelf_name": "G2"
+        },
+        {
+          "shelf_index": 3,
+          "shelf_id": "G3",
+          "shelf_name": "G3"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 2,
+  "group_name": "Garden",
+  "bookcases": [
+    {
+      "case_index": 1,
+      "case_id": "D",
+      "case_name": "Left",
+      "shelves": [
+        {
+          "shelf_index": 1,
+          "shelf_id": "D1",
+          "shelf_name": "D1"
+        },
+        {
+          "shelf_index": 2,
+          "shelf_id": "D2",
+          "shelf_name": "D2"
+        },
+        {
+          "shelf_index": 3,
+          "shelf_id": "D3",
+          "shelf_name": "D3"
+        },
+        {
+          "shelf_index": 4,
+          "shelf_id": "D4",
+          "shelf_name": "D4"
+        },
+        {
+          "shelf_index": 5,
+          "shelf_id": "D5",
+          "shelf_name": "D5"
+        },
+        {
+          "shelf_index": 6,
+          "shelf_id": "D6",
+          "shelf_name": "D6"
+        },
+        {
+          "shelf_index": 7,
+          "shelf_id": "D7",
+          "shelf_name": "D7"
+        }
+      ]
+    },
+    {
+      "case_index": 2,
+      "case_id": "E",
+      "case_name": "Middle",
+      "shelves": [
+        {
+          "shelf_index": 1,
+          "shelf_id": "E1",
+          "shelf_name": "E1"
+        },
+        {
+          "shelf_index": 2,
+          "shelf_id": "E2",
+          "shelf_name": "E2"
+        },
+        {
+          "shelf_index": 3,
+          "shelf_id": "E3",
+          "shelf_name": "E3"
+        },
+        {
+          "shelf_index": 4,
+          "shelf_id": "E4",
+          "shelf_name": "E4"
+        },
+        {
+          "shelf_index": 5,
+          "shelf_id": "E5",
+          "shelf_name": "E5"
+        },
+        {
+          "shelf_index": 6,
+          "shelf_id": "E6",
+          "shelf_name": "E6"
+        },
+        {
+          "shelf_index": 7,
+          "shelf_id": "E7",
+          "shelf_name": "E7"
+        }
+      ]
+    },
+    {
+      "case_index": 3,
+      "case_id": "F",
+      "case_name": "Right",
+      "shelves": [
+        {
+          "shelf_index": 1,
+          "shelf_id": "F1",
+          "shelf_name": "F1"
+        },
+        {
+          "shelf_index": 2,
+          "shelf_id": "F2",
+          "shelf_name": "F2"
+        },
+        {
+          "shelf_index": 3,
+          "shelf_id": "F3",
+          "shelf_name": "F3"
+        },
+        {
+          "shelf_index": 4,
+          "shelf_id": "F4",
+          "shelf_name": "F4"
+        },
+        {
+          "shelf_index": 5,
+          "shelf_id": "F5",
+          "shelf_name": "F5"
+        },
+        {
+          "shelf_index": 6,
+          "shelf_id": "F6",
+          "shelf_name": "F6"
+        },
+        {
+          "shelf_index": 7,
+          "shelf_id": "F7",
+          "shelf_name": "F7"
+        }
+      ]
+    },
+    {
+      "case_index": 4,
+      "case_id": "H",
+      "case_name": "Living Room",
+      "shelves": [
+        {
+          "shelf_index": 1,
+          "shelf_id": "H1",
+          "shelf_name": "H1"
+        },
+        {
+          "shelf_index": 2,
+          "shelf_id": "H2",
+          "shelf_name": "H2"
+        },
+        {
+          "shelf_index": 3,
+          "shelf_id": "H3",
+          "shelf_name": "H3"
+        }
+      ]
+    }
+  ]
+}]

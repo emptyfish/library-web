@@ -1,0 +1,31 @@
+---
+import { url } from '../lib/url';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { groups } from '../lib/library';
+
+// Old site URLs like /library/Pleasant%20Street or /library/Garden → /library/pleasant-street.
+// GitHub Pages serves this page for any missing path, so the forward happens here.
+const legacy = Object.fromEntries(groups.map((g) => [g.name.toLowerCase(), url(`/library/${g.slug}`)]));
+const libraryPrefix = url('/library/');
+---
+
+<Base title="Not found">
+  <script is:inline define:vars={{ legacy, libraryPrefix }}>
+    if (location.pathname.startsWith(libraryPrefix)) {
+      const name = decodeURIComponent(location.pathname.slice(libraryPrefix.length)).replace(/\/+$/, '').toLowerCase();
+      const target = legacy[name];
+      // Only forward when it's a different address, so a truly missing page can't loop.
+      if (target && target !== location.pathname.replace(/\/+$/, '')) location.replace(target + location.hash);
+    }
+  </script>
+  <div class="mx-auto max-w-xl px-4 py-24 text-center sm:px-6">
+    <p class="eyebrow">404</p>
+    <h1 class="mt-2 text-4xl font-semibold">That one's not on the shelves</h1>
+    <p class="mt-4 text-ink-2">The page may have moved when the library was re-catalogued.</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href={url('/')} class="btn-primary">Back to the library</a>
+      <button type="button" class="btn" data-open-search><Icon name="search" class="size-4" /> Search</button>
+    </div>
+  </div>
+</Base>

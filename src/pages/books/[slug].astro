@@ -1,0 +1,188 @@
+---
+import { url } from '../../lib/url';
+import Base from '../../layouts/Base.astro';
+import BookCover from '../../components/BookCover.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Icon from '../../components/Icon.astro';
+import ShelfPhoto from '../../components/ShelfPhoto.astro';
+import ShelfRow from '../../components/ShelfRow.astro';
+import Stars from '../../components/Stars.astro';
+import { authorBySlug, books, formatYear, getShelf, shelfUrl, type Book } from '../../lib/library';
+
+export function getStaticPaths() {
+  return books.map((book) => ({ params: { slug: book.slug }, props: { book } }));
+}
+
+const { book } = Astro.props as { book: Book };
+const author = authorBySlug.get(book.authorSlug)!;
+const shelf = getShelf(book.location.shelfId)!;
+const more = author.books.filter((b) => b.slug !== book.slug).slice(0, 6);
+const year = formatYear(book.publishYear);
+
+const facts = [
+  book.format && { label: 'Format', value: book.format },
+  book.pages && { label: 'Pages', value: book.pages.toLocaleString('en-US') },
+  year && { label: 'Published', value: year },
+  book.publisher && { label: 'Publisher', value: book.publisher },
+  book.volume && { label: 'Volume', value: book.volume },
+  (book.isbn13 || book.isbn) && { label: 'ISBN', value: book.isbn13 ?? book.isbn! },
+].filter(Boolean) as { label: string; value: string }[];
+---
+
+<Base title={`${book.title} by ${author.name}`} description={book.descriptionText?.slice(0, 160) ?? `${book.title} by ${author.name}`}>
+  <article class="mx-auto max-w-6xl px-4 pt-8 sm:px-6 sm:pt-12">
+    <Breadcrumb location={book.location} />
+
+    <div class="mt-6 grid gap-8 md:grid-cols-[minmax(0,17rem)_1fr] md:gap-12">
+      <!-- Cover + where it sat -->
+      <div class="flex gap-5 md:flex-col">
+        <BookCover book={book} size="lg" eager class="w-36 shrink-0 sm:w-44 md:w-full" />
+        <div class="card w-full self-start p-4 text-sm md:mt-1">
+          <p class="eyebrow flex items-center gap-1.5"><Icon name="location" class="size-3.5" /> Shelved at</p>
+          <p class="mt-1.5 font-display text-lg leading-snug">{book.location.group}</p>
+          <p class="font-sans text-ink-2">
+            {book.location.caseName} bookcase, shelf {book.location.shelfId}
+            {shelf.position && <span class="block text-ink-3">{shelf.position}</span>}
+          </p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <a href={shelfUrl(book.location)} class="btn"><Icon name="shelf" class="size-4" /> See the shelf</a>
+            {
+              shelf.photo && (
+                <button type="button" class="btn" data-open-photo={shelf.id}>
+                  <Icon name="photo" class="size-4" /> Photo
+                </button>
+              )
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="min-w-0">
+        <h1 class="text-3xl font-semibold sm:text-5xl">{book.title}</h1>
+        <p class="mt-3 text-xl text-ink-2">
+          by <a href={url(`/author/${author.slug}`)} class="link font-display">{author.name}</a>
+        </p>
+
+        {
+          (book.isSigned || book.isCollection) && (
+            <ul class="mt-4 flex flex-wrap gap-2">
+              {book.isSigned && (
+                <li class="chip !border-brass/50 !text-brass">
+                  <Icon name="signature" class="size-4" /> Signed copy
+                </li>
+              )}
+              {book.isCollection && (
+                <li class="chip">
+                  <Icon name="stack" class="size-4" /> Part of a collection
+                </li>
+              )}
+            </ul>
+          )
+        }
+
+        {
+          book.goodreads.rating && (
+            <div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 font-sans text-sm text-ink-3">
+              <Stars rating={book.goodreads.rating} class="h-4" />
+              <span class="font-semibold text-ink-2 tabular-nums">{book.goodreads.rating.toFixed(2)}</span>
+              {book.goodreads.ratingCount && <span>from {book.goodreads.ratingCount.toLocaleString('en-US')} Goodreads ratings</span>}
+            </div>
+          )
+        }
+
+        {
+          facts.length > 0 && (
+            <dl class="rule mt-6 grid grid-cols-2 gap-x-6 gap-y-3 pt-4 sm:grid-cols-3">
+              {facts.map((f) => (
+                <div class="min-w-0">
+                  <dt class="eyebrow">{f.label}</dt>
+                  <dd class="mt-0.5 truncate font-sans text-[0.95rem] text-ink" title={f.value}>{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+
+        {
+          book.notes && (
+            <aside class="mt-6 rounded-r-md border-l-4 border-brass bg-paper-2 px-4 py-3">
+              <p class="eyebrow">Note from the catalog</p>
+              <p class="mt-1 italic text-ink-2">{book.notes}</p>
+            </aside>
+          )
+        }
+
+        {
+          book.descriptionHtml ? (
+            <section class="mt-8">
+              <h2 class="sr-only">Description</h2>
+              <div class="prose-book max-w-prose" set:html={book.descriptionHtml} />
+            </section>
+          ) : (
+            <p class="mt-8 italic text-ink-3">No description was recorded for this book.</p>
+          )
+        }
+
+        {
+          book.goodreads.link && (
+            <a href={book.goodreads.link} class="btn mt-8" rel="noopener noreferrer" target="_blank">
+              View on Goodreads <Icon name="external" class="size-4" />
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <!-- The shelf it sat on, with this book raised -->
+    <section class="mt-16" aria-labelledby="neighbors">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="neighbors" class="text-2xl font-semibold">Its neighbors on shelf {shelf.id}</h2>
+        <a href={shelfUrl(book.location)} class="font-sans text-sm font-medium text-accent hover:underline">Open the full shelf →</a>
+      </div>
+      <div class="mt-4">
+        <ShelfRow books={shelf.books} current={book.slug} label={`Books on shelf ${shelf.id}`} />
+      </div>
+    </section>
+
+    {
+      more.length > 0 && (
+        <section class="mt-16" aria-labelledby="more">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 id="more" class="text-2xl font-semibold">More by {author.name}</h2>
+            {author.books.length > 7 && (
+              <a href={url(`/author/${author.slug}`)} class="font-sans text-sm font-medium text-accent hover:underline">
+                All {author.books.length} books →
+              </a>
+            )}
+          </div>
+          <ul class="mt-5 grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+            {more.map((b) => (
+              <li>
+                <a href={url(`/books/${b.slug}`)} class="group block">
+                  <BookCover book={b} size="md" class="transition group-hover:-translate-y-1" />
+                  <p class="mt-2 line-clamp-2 font-display text-sm leading-snug group-hover:text-accent">{b.title}</p>
+                  {b.publishYear && <p class="font-sans text-xs text-ink-3">{formatYear(b.publishYear)}</p>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <ShelfPhoto shelf={shelf} caption={`${book.location.group} · ${book.location.caseName} bookcase · Shelf ${shelf.id}`} />
+  </article>
+
+  <script is:inline define:vars={{ label: `${book.title} by ${book.author}` }}>
+    window.libTrack('bookDetail', label);
+  </script>
+</Base>
+
+<script>
+  // Bring the highlighted spine into view on the neighbors shelf.
+  document.querySelectorAll<HTMLElement>('.spine[aria-current="true"]').forEach((el) => {
+    const row = el.closest<HTMLElement>('[data-shelf-row]');
+    if (row) row.scrollLeft = el.offsetLeft - row.clientWidth / 2 + el.clientWidth / 2;
+  });
+</script>

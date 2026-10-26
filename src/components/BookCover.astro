@@ -1,0 +1,50 @@
+---
+// Goodreads cover when there is one; otherwise (or if the image fails to load) a cloth-bound cover
+// drawn in the book's spine color.
+import type { Book } from '../lib/library';
+import { spineStyle } from '../lib/library';
+
+interface Props {
+  book: Book;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+  eager?: boolean;
+}
+
+const { book, size = 'md', class: className = '', eager = false } = Astro.props;
+const src = size === 'sm' ? book.coverSmall : (book.cover ?? book.coverSmall);
+const s = spineStyle(book);
+const titleSize = { sm: 'text-[0.55rem]', md: 'text-sm', lg: 'text-xl sm:text-2xl' }[size];
+const authorSize = { sm: 'text-[0.45rem]', md: 'text-[0.65rem]', lg: 'text-sm' }[size];
+const pad = { sm: 'p-1.5', md: 'p-3', lg: 'p-6' }[size];
+---
+
+<div
+  class:list={['relative aspect-[2/3] overflow-hidden rounded-[3px] shadow-[0_10px_24px_-12px_rgb(0_0_0/0.6)]', className]}
+  style={`--spine-bg:${s.bg};--spine-fg:${s.fg}`}
+>
+  <div
+    class:list={['absolute inset-0 flex flex-col justify-between text-center', pad]}
+    style="background: linear-gradient(90deg, rgb(0 0 0 / 0.28), transparent 9%, rgb(255 255 255 / 0.06) 12%, transparent 30%), var(--spine-bg); color: var(--spine-fg);"
+    aria-hidden={src ? 'true' : undefined}
+  >
+    <div class="absolute inset-[6%] rounded-[2px] border border-current opacity-30"></div>
+    <p class:list={['relative mt-[12%] font-display font-medium leading-tight line-clamp-5', titleSize]}>{book.title}</p>
+    <p class:list={['relative mb-[10%] font-sans uppercase tracking-widest opacity-80 line-clamp-2', authorSize]}>
+      {book.author}
+    </p>
+  </div>
+  {
+    src && (
+      <img
+        src={src}
+        alt={`Cover of ${book.title}`}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        referrerpolicy="no-referrer"
+        class="absolute inset-0 size-full object-cover"
+        onerror="this.remove()"
+      />
+    )
+  }
+</div>

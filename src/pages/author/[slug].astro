@@ -1,0 +1,98 @@
+---
+import { url } from '../../lib/url';
+import Base from '../../layouts/Base.astro';
+import BookCover from '../../components/BookCover.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Icon from '../../components/Icon.astro';
+import ShelfPhoto from '../../components/ShelfPhoto.astro';
+import { authors, formatYear, getShelf, type Author } from '../../lib/library';
+
+export function getStaticPaths() {
+  return authors.map((author) => ({ params: { slug: author.slug }, props: { author } }));
+}
+
+const { author } = Astro.props as { author: Author };
+const count = author.books.length;
+
+// Where this author's books were spread across the library.
+const byGroup = new Map<string, number>();
+for (const b of author.books) byGroup.set(b.location.group, (byGroup.get(b.location.group) ?? 0) + 1);
+const shelves = [...new Set(author.books.map((b) => b.location.shelfId))].map((id) => getShelf(id)!);
+const totalPages = author.books.reduce((n, b) => n + (b.pages ?? 0), 0);
+---
+
+<Base title={author.name} description={`${count} book${count === 1 ? '' : 's'} by ${author.name} in the library.`}>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <header class="pt-10 sm:pt-14">
+      <p class="eyebrow"><a href={url('/authors')} class="hover:text-accent">Authors</a></p>
+      <h1 class="mt-2 text-4xl font-semibold sm:text-5xl">{author.name}</h1>
+      <p class="mt-3 font-sans text-sm text-ink-3">
+        {count} book{count === 1 ? '' : 's'}
+        {totalPages > 0 && <> · {totalPages.toLocaleString('en-US')} pages</>}
+        {' · '}
+        {[...byGroup].map(([g, c], i) => (
+          <>
+            {i > 0 && ', '}
+            {g} ({c})
+          </>
+        ))}
+      </p>
+    </header>
+
+    <ul class="mt-8 grid gap-4 lg:grid-cols-2">
+      {
+        author.books.map((b) => {
+          const shelf = getShelf(b.location.shelfId)!;
+          const year = formatYear(b.publishYear);
+          return (
+            <li class="card flex gap-4 p-4">
+              <a href={url(`/books/${b.slug}`)} class="w-20 shrink-0 sm:w-24" tabindex="-1" aria-hidden="true">
+                <BookCover book={b} size="sm" class="w-full" />
+              </a>
+              <div class="flex min-w-0 flex-1 flex-col">
+                <h2 class="text-lg font-semibold leading-snug sm:text-xl">
+                  <a href={url(`/books/${b.slug}`)} class="hover:text-accent hover:underline">
+                    {b.title}
+                  </a>
+                </h2>
+                <p class="mt-1 font-sans text-sm text-ink-3">
+                  {[year && `Published ${year}`, b.publisher, b.pages && `${b.pages} pages`].filter(Boolean).join(' · ')}
+                </p>
+                {(b.isSigned || b.isCollection || b.volume) && (
+                  <ul class="mt-2 flex flex-wrap gap-1.5">
+                    {b.isSigned && (
+                      <li class="chip !border-brass/50 !text-brass">
+                        <Icon name="signature" class="size-3.5" /> Signed
+                      </li>
+                    )}
+                    {b.isCollection && (
+                      <li class="chip">
+                        <Icon name="stack" class="size-3.5" /> Collection
+                      </li>
+                    )}
+                    {b.volume && <li class="chip">Vol. {b.volume}</li>}
+                  </ul>
+                )}
+                <div class="mt-auto flex flex-wrap items-center justify-between gap-2 pt-3">
+                  <Breadcrumb location={b.location} class="!text-xs" />
+                  {shelf.photo && (
+                    <button type="button" class="btn !px-2 !py-1 !text-xs" data-open-photo={shelf.id}>
+                      <Icon name="photo" class="size-3.5" /> Shelf photo
+                    </button>
+                  )}
+                </div>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    {
+      shelves.map((s) => {
+        const b = s.books[0];
+        return <ShelfPhoto shelf={s} caption={`${b.location.group} · ${b.location.caseName} bookcase · Shelf ${s.id}`} />;
+      })
+    }
+  </div>
+</Base>

@@ -1,0 +1,45 @@
+---
+// Pop-up with the photo of a shelf. Open it with any element that has data-open-photo="<shelfId>".
+// Render it once per shelf on a page; the image only downloads when the pop-up opens.
+import { Picture } from 'astro:assets';
+import type { Shelf } from '../lib/library';
+import Icon from './Icon.astro';
+
+interface Props {
+  shelf: Shelf;
+  caption: string;
+}
+
+const { shelf, caption } = Astro.props;
+---
+
+{
+  shelf.photo && (
+    <dialog
+      id={`photo-${shelf.id}`}
+      data-photo-dialog={shelf.id}
+      class="m-auto w-[min(72rem,calc(100vw-1.5rem))] max-h-[calc(100dvh-2rem)] rounded-xl border border-line bg-card p-0 text-ink shadow-2xl"
+      aria-label={caption}
+    >
+      <div class="flex items-center justify-between gap-4 border-b border-line px-4 py-3">
+        <p class="font-display text-lg">{caption}</p>
+        <form method="dialog">
+          <button class="btn !px-2" aria-label="Close photo">
+            <Icon name="close" />
+          </button>
+        </form>
+      </div>
+      <div class="overflow-auto bg-black/80">
+        <Picture
+          src={shelf.photo.image}
+          alt={shelf.photo.alt}
+          formats={['webp']}
+          widths={[640, 960, shelf.photo.image.width]}
+          sizes="(max-width: 72rem) 100vw, 72rem"
+          loading="lazy"
+          class="mx-auto h-auto w-full"
+        />
+      </div>
+    </dialog>
+  )
+}
